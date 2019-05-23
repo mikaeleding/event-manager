@@ -7,8 +7,8 @@
             <v-card-title>{{meetup.title}}</v-card-title>
             <v-img :src="meetup.imageUrl" height="400px"></v-img>
             <v-card-text>
-              <div class="info--text">{{meetup.date}} - Paris</div>
-              <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, magnam.</div>
+              <div class="info--text">{{meetup.date | date}} - {{meetup.location}}</div>
+              <div>{{meetup.location}}</div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
