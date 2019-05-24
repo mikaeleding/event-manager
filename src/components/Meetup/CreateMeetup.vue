@@ -27,13 +27,14 @@
             </v-layout>
             <v-layout row>
               <v-flex xs12 sm6 offset-sm3>
-                <v-text-field
-                  name="imageUrl"
-                  label="Image URL"
-                  id="image-url"
-                  v-model="imageUrl"
-                  required
-                ></v-text-field>
+                <v-btn raised @click="onPickFile">Upload Image</v-btn>
+                <input
+                  type="file"
+                  style="display: none"
+                  ref="fileInput"
+                  accept="image/*"
+                  @change="onFilePicked"
+                >
               </v-flex>
             </v-layout>
             <v-layout row>
@@ -58,17 +59,16 @@
                 <h4>Choose a Date & Time</h4>
               </v-flex>
             </v-layout>
-            <v-layout row>
-              <v-flex xs12 sm6 offset-sm3>
+            <v-layout align-center justify-center row fill-height wrap>
+              <v-flex xs12 sm6 class="text-xs-center text-sm-right">
                 <v-date-picker v-model="date"></v-date-picker>
               </v-flex>
-            </v-layout>
-            <v-layout row>
-              <v-flex xs12 sm6 offset-sm3>
+
+              <v-flex xs12 sm6 class="text-xs-center text-sm-left">
                 <v-time-picker v-model="time"></v-time-picker>
               </v-flex>
             </v-layout>
-            <v-layout row>
+            <v-layout align-center justify-center row fill-height>
               <v-flex xs12 sm6 offset-sm3>
                 <v-btn class="primary" :disabled="!formIsValid" type="submit">Create Event</v-btn>
               </v-flex>
@@ -130,6 +130,13 @@ export default {
       };
       this.$store.dispatch("createMeetup", meetupData);
       this.$router.push("/meetups");
+    },
+    onPickFile() {
+      this.$refs.fileInput.click();
+    },
+    onFilePicked(event) {
+      const file = event.target.files;
+      let filename = files[0].filename;
     }
   }
 };

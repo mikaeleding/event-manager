@@ -5,10 +5,12 @@ import router from "./router";
 import { store } from "./store"
 import DateFilter from "./date"
 import * as firebase from 'firebase'
+import AlertComp from './components/Shared/Alert.vue'
 
 Vue.config.productionTip = false;
 
 Vue.filter('date', DateFilter)
+Vue.component('app-alert', AlertComp)
 
 new Vue({
   router,
@@ -24,5 +26,20 @@ new Vue({
       messagingSenderId: '703527438227',
       appId: '1:703527438227:web:47d82fa1e4a86b61'
     })
+    //get users from firebase
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        const userData = {
+          id: user.uid,
+          email: user.email,
+          registeredMeetups: []
+        }
+        store.dispatch('setUser', userData)
+      } else {
+        console.log('No user is signed in.')
+      }
+    })
+    this.$store.dispatch('loadMeetups')
   }
 }).$mount("#app");

@@ -8,6 +8,12 @@
           </v-list-tile-action>
           <v-list-tile-content>{{item.title}}</v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-if="userIsAuthenticated" @click="onLogout">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>Logout</v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar>
@@ -15,12 +21,14 @@
       <v-toolbar-title>
         <router-link to="/" tag="span" style="cursor: pointer">Event Manager</router-link>
       </v-toolbar-title>
-
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
         <v-btn v-for="item in menuItem" :key="item.title" :to="item.link" flat>
           <v-icon left>{{item.icon}}</v-icon>
           {{item.title}}
+        </v-btn>
+        <v-btn flat v-if="userIsAuthenticated" @click="onLogout">
+          <v-icon left>exit_to_app</v-icon>Logout
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
@@ -41,15 +49,40 @@ export default {
   // },
   data() {
     return {
-      sideNav: false,
-      menuItem: [
-        { icon: "event", title: "View Events", link: "/meetups" },
-        { icon: "room", title: "Organize Event", link: "/meetup/new" },
-        { icon: "person", title: "Profile", link: "/profile" },
+      sideNav: false
+    };
+  },
+  computed: {
+    menuItem() {
+      let menuItems = [
         { icon: "face", title: "Sign Up", link: "/signup" },
         { icon: "lock_open", title: "Log In", link: "/login" }
-      ]
-    };
+      ];
+
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          { title: "Welcome, " + this.user.email },
+          { icon: "event", title: "View Events", link: "/meetups" },
+          { icon: "room", title: "Organize Event", link: "/meetup/new" },
+          { icon: "person", title: "Profile", link: "/profile" }
+        ];
+      }
+      return menuItems;
+    },
+    userIsAuthenticated() {
+      return (
+        this.$store.getters.user !== null &&
+        this.$store.getters.user !== undefined
+      );
+    },
+    user() {
+      return this.$store.getters.user;
+    }
+  },
+  methods: {
+    onLogout() {
+      this.$store.dispatch("logout");
+    }
   }
 };
 </script>
