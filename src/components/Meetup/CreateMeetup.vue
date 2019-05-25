@@ -89,7 +89,8 @@ export default {
       imageUrl: "",
       description: "",
       date: null,
-      time: new Date()
+      time: new Date(),
+      image: null
     };
   },
   computed: {
@@ -121,10 +122,13 @@ export default {
       if (!this.formIsValid) {
         return;
       }
+      if (!this.image) {
+        return;
+      }
       const meetupData = {
         title: this.title,
         location: this.location,
-        imageUrl: this.imageUrl,
+        image: this.image,
         description: this.description,
         date: this.submittableDateTime
       };
@@ -135,8 +139,17 @@ export default {
       this.$refs.fileInput.click();
     },
     onFilePicked(event) {
-      const file = event.target.files;
-      let filename = files[0].filename;
+      const files = event.target.files;
+      let filename = files[0].name;
+      if (filename.lastIndexOf(".") <= 0) {
+        return alert("Please add a valid file");
+      }
+      const fileReader = new FileReader();
+      fileReader.addEventListener("load", () => {
+        this.imageUrl = fileReader.result;
+      });
+      fileReader.readAsDataURL(files[0]);
+      this.image = files[0];
     }
   }
 };
