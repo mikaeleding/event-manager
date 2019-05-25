@@ -19,10 +19,10 @@
               <div class="info--text">{{meetup.date | date}} - {{meetup.location}}</div>
               <div>{{meetup.description}}</div>
             </v-card-text>
-            <v-card-actions>
+            <!-- <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn class="primary">Register</v-btn>
-            </v-card-actions>
+            </v-card-actions>-->
           </v-card>
         </v-flex>
       </v-layout>
