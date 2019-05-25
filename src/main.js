@@ -6,11 +6,13 @@ import { store } from "./store"
 import DateFilter from "./date"
 import * as firebase from 'firebase'
 import AlertComp from './components/Shared/Alert.vue'
+import EditMeetupDetails from "./components/Meetup/EditMeetupDetailsDialog.vue"
 
 Vue.config.productionTip = false;
 
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertComp)
+Vue.component('app-edit-details', EditMeetupDetails)
 
 new Vue({
   router,
