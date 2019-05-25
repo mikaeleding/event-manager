@@ -63,8 +63,7 @@ export default {
         menuItems = [
           { title: "Welcome, " + this.user.email },
           { icon: "event", title: "View Events", link: "/meetups" },
-          { icon: "room", title: "Organize Event", link: "/meetup/new" },
-          { icon: "person", title: "Profile", link: "/profile" }
+          { icon: "room", title: "Organize Event", link: "/meetup/new" }
         ];
       }
       return menuItems;
