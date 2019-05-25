@@ -7,12 +7,13 @@ import DateFilter from "./date"
 import * as firebase from 'firebase'
 import AlertComp from './components/Shared/Alert.vue'
 import EditMeetupDetails from "./components/Meetup/EditMeetupDetailsDialog.vue"
-
+import RegisterDialog from './components/Meetup/RegisterDialog.vue'
 Vue.config.productionTip = false;
 
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertComp)
 Vue.component('app-edit-details', EditMeetupDetails)
+Vue.component('app-meetup-register', RegisterDialog)
 
 new Vue({
   router,
@@ -35,8 +36,10 @@ new Vue({
         const userData = {
           id: user.uid,
           email: user.email,
-          registeredMeetups: []
+          registeredMeetups: [],
+          fbKeys: {}
         }
+        console.log(userData.id)
         store.dispatch('setUser', userData)
       } else {
         console.log('No user is signed in.')

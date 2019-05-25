@@ -88,6 +88,7 @@ export default {
       location: "",
       imageUrl: "",
       description: "",
+      listOfUsers: [],
       date: null,
       time: new Date(),
       image: null
@@ -130,7 +131,8 @@ export default {
         location: this.location,
         image: this.image,
         description: this.description,
-        date: this.submittableDateTime
+        date: this.submittableDateTime,
+        listOfUsers: this.listOfUsers
       };
       this.$store.dispatch("createMeetup", meetupData);
       this.$router.push("/meetups");

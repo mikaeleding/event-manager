@@ -18,11 +18,13 @@
             <v-card-text>
               <div class="info--text">{{meetup.date | date}} - {{meetup.location}}</div>
               <div>{{meetup.description}}</div>
+              <p v-for="user in listOfUsers" :key="user">{{user}}</p>
             </v-card-text>
-            <!-- <v-card-actions>
+            <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn class="primary">Register</v-btn>
-            </v-card-actions>-->
+              <!-- <app-meetup-register :meetupId="meetup.id"></app-meetup-register> -->
+              <v-btn @click="registerEvent">Register</v-btn>
+            </v-card-actions>
           </v-card>
         </v-flex>
       </v-layout>
@@ -33,6 +35,11 @@
 <script>
 export default {
   props: ["id"],
+  data() {
+    return {
+      listOfUsers: []
+    }
+  },
   computed: {
     meetup() {
       return this.$store.getters.loadedMeetup(this.id);
@@ -54,6 +61,13 @@ export default {
     },
     checkMeetupLoad() {
       return this.meetup != null ? true : false;
+    }
+  },
+  methods: {
+    registerEvent() {
+      this.listOfUsers.push(this.$store.getters.user.email)
+      // let tempEmail = this.$store.getters.user.email
+      // this.$store.dispatch('registerEvent', tempEmail)
     }
   }
 };
