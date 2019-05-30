@@ -19,13 +19,14 @@
               <div class="info--text">{{meetup.date | date}} - {{meetup.location}}</div>
               <div>{{meetup.description}}</div>
               <div v-if="adminAccount">
-                <p v-for="user in listOfUsers" :key="user">{{user}}</p>
+                <h3 style="margin-top: 10px">Registered Users({{numberRegistered}})</h3>
+                <span v-for="user in listOfUsers" :key="user">{{user}} &nbsp;</span>
               </div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <!-- <app-meetup-register :meetupId="meetup.id"></app-meetup-register> -->
-              <v-btn @click="registerEvent">Register</v-btn>
+              <v-btn v-if="!adminAccount" @click="registerEvent">Register</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -41,17 +42,19 @@ export default {
   data() {
     return {
       listOfUsers: [],
-      adminAccount: false
+      adminAccount: false,
+      numberRegistered: 0
     };
   },
   created() {
     setTimeout(() => {
       this.listOfUsers = this.$store.getters.loadedMeetup(this.id).listOfUsers;
+      this.numberRegistered = this.listOfUsers.length;
       console.log(this.listOfUsers);
-      this.$store.getters.user.email === "test1@test.com"
+      this.$store.getters.user.email === "admin@test.com"
         ? (this.adminAccount = true)
         : (this.adminAccount = false);
-    }, 3000);
+    }, 2500);
   },
   computed: {
     meetup() {
@@ -79,7 +82,7 @@ export default {
       return this.meetup != null ? true : false;
     },
     userAccount() {
-      return this.$store.getters.user.email === "test1@test.com"
+      return this.$store.getters.user.email === "admin@test.com"
         ? console.log("hi admin")
         : console.log("not admin");
     }
@@ -95,6 +98,7 @@ export default {
       };
       updateObj.meetup.listOfUsers = this.listOfUsers;
       this.$store.dispatch("registerEvent", updateObj);
+
       // this.listOfUsers.push(this.$store.getters.user.email);
       // console.log(this.listOfUsers);
       //console.log(this.listOfUsers);
