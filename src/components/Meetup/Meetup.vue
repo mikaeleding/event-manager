@@ -26,7 +26,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <!-- <app-meetup-register :meetupId="meetup.id"></app-meetup-register> -->
-              <v-btn v-if="!adminAccount" @click="registerEvent">Register</v-btn>
+              <v-btn @click="registerEvent">Register</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
