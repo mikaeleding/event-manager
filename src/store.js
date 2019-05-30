@@ -37,7 +37,7 @@ export const store = new Vuex.Store({
     mutations: {
         registerUserForMeetup(state, payload) {
             const id = payload.id
-            if(state.user.registeredMeetups.findIndex(meetup => meetup.id === id) >= 0) {
+            if (state.user.registeredMeetups.findIndex(meetup => meetup.id === id) >= 0) {
                 return
             }
             state.user.registeredMeetups.push(id)
@@ -85,39 +85,39 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
-        
-        registerUserForMeetup({commit, getters}, payload) {
+
+        registerUserForMeetup({ commit, getters }, payload) {
             commit('setLoading', true)
             const user = getters.user
             firebase.database().ref('/users/' + user.id).child('/registrations/')
-            .push(payload)
-            .then((data) => {
-                commit('setLoading', false)
-                commit('registerUserForMeetup', {id: payload, fbKey: data.key})
-            })
-            .catch(error => {
-                console.log(error)
-                commit('setLoading', false)
-               
-            })
+                .push(payload)
+                .then((data) => {
+                    commit('setLoading', false)
+                    commit('registerUserForMeetup', { id: payload, fbKey: data.key })
+                })
+                .catch(error => {
+                    console.log(error)
+                    commit('setLoading', false)
+
+                })
         },
-        unregisterUserFromMeetup({commit, getters}, payload) {
+        unregisterUserFromMeetup({ commit, getters }, payload) {
             commit('setLoading', true)
             const user = getters.user
-            if(!user.fbKeys) {
+            if (!user.fbKeys) {
                 return
             }
             const fbKey = user.fbKeys[payload]
             firebase.database().ref('/users/' + user.id + '/registrations/').child(fbKey)
-            .remove()
-            .then(() => {
-                commit('setLoading', false)
-                commit('unregisterUserFromMeetup', payload)
-            })
-            .catch(error => {
-                console.log(error)
-                commit('setLoading', false)
-            })
+                .remove()
+                .then(() => {
+                    commit('setLoading', false)
+                    commit('unregisterUserFromMeetup', payload)
+                })
+                .catch(error => {
+                    console.log(error)
+                    commit('setLoading', false)
+                })
         },
         loadMeetups({ commit }) {
             commit('setLoading', true)
@@ -195,21 +195,27 @@ export const store = new Vuex.Store({
                 })
 
         },
-        registerEvent({commit}, payload) {
+        registerEvent({ commit }, payload) {
             commit('setLoading', true)
             const updateObj = {}
-            updateObj.listOfUsers = []
-            if(payload) {
-                updateObj.listOfUsers.push(payload)
+            //updateObj.listOfUsers = []
+
+            if (payload) {
+                //updateObj.listOfUsers.push(payload)
+                //console.log(payload.meetup.id)
+                updateObj.listOfUsers = payload.meetup.listOfUsers
+                //console.log(updateObj)
+                // console.log(payload)
+                // console.log(payload.meetup.id)
             }
-            firebase.database().ref('meetups').child(payload.id).update(updateObj)
-            .then(() => {
-                commit('setLoading', false)
-                commit('registerEvent', payload)
-            })
-            .catch(error => {
-                console.log(error)
-            })
+            firebase.database().ref('meetups').child(payload.meetup.id).update(updateObj)
+                .then(() => {
+                    commit('setLoading', false)
+                    commit('registerEvent', payload)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         updateMeetupData({ commit }, payload) {
             commit('setLoading', true)

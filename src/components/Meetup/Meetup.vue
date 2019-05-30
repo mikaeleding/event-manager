@@ -18,7 +18,9 @@
             <v-card-text>
               <div class="info--text">{{meetup.date | date}} - {{meetup.location}}</div>
               <div>{{meetup.description}}</div>
-              <p v-for="user in listOfUsers" :key="user">{{user}}</p>
+              <div v-if="adminAccount">
+                <p v-for="user in listOfUsers" :key="user">{{user}}</p>
+              </div>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -33,16 +35,30 @@
 </template>
 
 <script>
+import { setTimeout } from "timers";
 export default {
   props: ["id"],
   data() {
     return {
-      listOfUsers: []
-    }
+      listOfUsers: [],
+      adminAccount: false
+    };
+  },
+  created() {
+    setTimeout(() => {
+      this.listOfUsers = this.$store.getters.loadedMeetup(this.id).listOfUsers;
+      console.log(this.listOfUsers);
+      this.$store.getters.user.email === "test1@test.com"
+        ? (this.adminAccount = true)
+        : (this.adminAccount = false);
+    }, 3000);
   },
   computed: {
     meetup() {
       return this.$store.getters.loadedMeetup(this.id);
+    },
+    meetups() {
+      return this.$store.getters.loadedMeetups;
     },
     userIsAuthenticated() {
       return (
@@ -61,11 +77,44 @@ export default {
     },
     checkMeetupLoad() {
       return this.meetup != null ? true : false;
+    },
+    userAccount() {
+      return this.$store.getters.user.email === "test1@test.com"
+        ? console.log("hi admin")
+        : console.log("not admin");
     }
   },
   methods: {
     registerEvent() {
-      this.listOfUsers.push(this.$store.getters.user.email)
+      let uniqueRegister = new Set([...this.listOfUsers]);
+      uniqueRegister.add(this.$store.getters.user.email);
+      this.listOfUsers = [...uniqueRegister];
+      console.log(this.listOfUsers);
+      let updateObj = {
+        meetup: this.$store.getters.loadedMeetup(this.id)
+      };
+      updateObj.meetup.listOfUsers = this.listOfUsers;
+      this.$store.dispatch("registerEvent", updateObj);
+      // this.listOfUsers.push(this.$store.getters.user.email);
+      // console.log(this.listOfUsers);
+      //console.log(this.listOfUsers);
+      //console.log(this.$store.getters.loadedMeetup(this.id).listOfUsers);
+      //console.log(this.meetup.listOfUsers);
+      // for (let i = 0; i < this.listOfUsers.length; i++) {
+      //   if (this.listOfUsers[i] === this.$store.getters.user.email) {
+      //     alert("User already registered");
+      //   } else {
+      //     this.listOfUsers.push(this.$store.getters.user.email);
+      //   }
+      //   console.log(this.listOfUsers);
+      // }
+      // let updateObj = {
+      //   email: this.$store.getters.user.email,
+      //   meetup: this.$store.getters.loadedMeetup(this.id)
+      // };
+      //console.log(updateObj.meetup.listOfUsers);
+      // this.$store.dispatch("registerEvent", updateObj);
+      //this.listOfUsers.push(this.$store.getters.user.email);
       // let tempEmail = this.$store.getters.user.email
       // this.$store.dispatch('registerEvent', tempEmail)
     }
